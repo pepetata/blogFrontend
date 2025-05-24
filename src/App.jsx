@@ -1,17 +1,19 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import blogService from "./services/blogs";
-import { Login, Logout } from "./components/Login";
+import { Logged, Login, Logout } from "./components/Login";
 import Blog from "./components/Blog";
 import Button from "./components/Button";
 import Notification from "./components/Notification";
-import AddBlog from "./components/AddBlog";
+import BlogForm from "./components/BlogForm";
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
   const noErrorMessage = { type: "", message: "" };
   const [errorMessage, setErrorMessage] = useState(noErrorMessage);
   const [user, setUser] = useState(null);
-  const [newBlog, setNewBlog] = useState(null);
+  const [showBlogForm, setShowBlogForm] = useState(false);
+
+  const blogFormRef = useRef();
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem("loggedBlogAppUser");
@@ -25,36 +27,61 @@ const App = () => {
   }, []);
 
   console.log(`=== user`, user);
+  console.log(`=== blogs`, blogs);
 
-  const AddBlogButton = () => {
-    return <Button onClick={() => setNewBlog(true)} text="New Blog" />;
+  const updateBlog = (updatedBlog) => {
+    setBlogs((blogs) =>
+      blogs.map((blog) => (blog.id === updatedBlog.id ? updatedBlog : blog))
+    );
+  };
+
+  const removeBlog = (deletedBlog) => {
+    setBlogs((blogs) => blogs.filter((blog) => blog.id !== deletedBlog.id));
   };
 
   return (
     <div>
-      <h2>Blogs</h2>
+      <h2>Blogs Application</h2>
       <Notification type={errorMessage.type} message={errorMessage.message} />
 
-      {user === null ? (
+      {!user ? (
         <Login setUser={setUser} setErrorMessage={setErrorMessage} />
       ) : (
         <div>
-          <p>{user.name} logged-in</p>
-          <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
-            <Logout setUser={setUser} setNewBlog={setNewBlog} />
-            {newBlog ? null : <AddBlogButton />}
-          </div>
-          <br />
-          <br />
-          <div style={{ display: newBlog ? "block" : "none" }}>
-            <AddBlog
-              setNewBlog={setNewBlog}
+          <Logged
+            user={user}
+            setUser={setUser}
+            setShowBlogForm={setShowBlogForm}
+          />
+
+          {!showBlogForm && (
+            <>
+              <Button onClick={() => setShowBlogForm(true)} text="New Blog" />
+              <h2>Blogs</h2>
+              {blogs
+                .slice() // make a shallow copy to avoid mutating state
+                .sort((a, b) => b.likes - a.likes)
+                .map((blog) => (
+                  <Blog
+                    key={blog.id}
+                    blog={blog}
+                    setErrorMessage={setErrorMessage}
+                    updateBlog={updateBlog}
+                    removeBlog={removeBlog}
+                    userId={user.id}
+                  />
+                ))}
+            </>
+          )}
+
+          {showBlogForm && (
+            <BlogForm
               setBlogs={setBlogs}
               blogs={blogs}
               setErrorMessage={setErrorMessage}
+              toggleVisibility={() => setShowBlogForm(false)}
             />
-          </div>
-          {!newBlog && blogs.map((blog) => <Blog key={blog.id} blog={blog} />)}
+          )}
         </div>
       )}
     </div>

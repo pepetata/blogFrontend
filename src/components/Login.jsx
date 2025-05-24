@@ -3,7 +3,9 @@ import loginService from "../services/login";
 import blogService from "../services/blogs";
 import Button from "../components/Button";
 
-export const Login = ({ setUser, setErrorMessage }) => {
+// export const Login = ({ setUser, setErrorMessage }) => {
+export const Login = (props) => {
+  // console.log(`-------- Login props`, props);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const handleLogin = async (event) => {
@@ -18,15 +20,15 @@ export const Login = ({ setUser, setErrorMessage }) => {
 
       window.localStorage.setItem("loggedBlogAppUser", JSON.stringify(user));
       blogService.setToken(user.token);
-      setUser(user);
+      props.setUser(user);
       setUsername("");
       setPassword("");
     } catch (exception) {
       console.log(`exception========`, exception);
-      setUser(null);
-      setErrorMessage({ type: "error", message: "Wrong credentials" });
+      props.setUser(null);
+      props.setErrorMessage({ type: "error", message: "Wrong credentials" });
       setTimeout(() => {
-        setErrorMessage({ type: "", message: "" });
+        props.setErrorMessage({ type: "", message: "" });
       }, 5000);
     }
   };
@@ -60,18 +62,19 @@ export const Login = ({ setUser, setErrorMessage }) => {
   );
 };
 
-export const Logged = () => {
+export const Logged = (props) => {
+  // console.log(`---- Logged props`, props);
   return (
     <div>
-      <p>{user.name} logged-in</p>
+      <span style={{ marginRight: "0.5em" }}>{props.user.name} logged-in</span>
       {/* <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}> */}
-      <Logout setUser={setUser} />
+      <Logout setUser={props.setUser} setShowBlogForm={props.setShowBlogForm} />
       {/* </div> */}
     </div>
   );
 };
 
-export const Logout = ({ setUser, setNewBlog }) => {
+export const Logout = ({ setUser, setShowBlogForm: setShowBlogForm }) => {
   const handleLogout = async (event) => {
     event.preventDefault();
 
@@ -81,7 +84,7 @@ export const Logout = ({ setUser, setNewBlog }) => {
     window.localStorage.removeItem("loggedBlogAppUser");
     blogService.setToken(null);
     setUser(null);
-    setNewBlog(false);
+    setShowBlogForm(false);
   };
 
   return <Button onClick={handleLogout} text="Logout" />;

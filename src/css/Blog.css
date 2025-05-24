@@ -1,0 +1,16 @@
+.blog-details {
+  background: #c8d8ee;
+  border-radius: 4px;
+  padding: 0.7em 1em;
+  margin-top: 0em;
+  transition: background 0.2s;
+}
+
+.blog-container {
+  margin: 0 0;
+  padding: 0.3em;
+  border-radius: 6px;
+  border: 1px solid #e5e7eb;
+  background: #fafbfc;
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.04);
+}

@@ -1,15 +1,16 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import blogService from "../services/blogs";
 import Button from "./Button";
 import "../css/AddBlog.css";
 
-const AddBlog = ({ setNewBlog, setBlogs, blogs, setErrorMessage }) => {
+const BlogForm = (props) => {
   const [blogForm, setBlogForm] = useState({
     title: "",
     author: "",
     url: "",
   });
 
+  console.log(`----props `, props);
   const handleBlogChange = (event) => {
     const { id, value } = event.target;
     setBlogForm((prev) => ({
@@ -23,22 +24,23 @@ const AddBlog = ({ setNewBlog, setBlogs, blogs, setErrorMessage }) => {
     blogService
       .create(blogForm)
       .then((response) => {
-        setBlogs(blogs.concat(response));
+        props.setBlogs(props.blogs.concat(response));
         setBlogForm({ title: "", author: "", url: "" }); // reset fields
-        setNewBlog(false);
-        setErrorMessage({
+        // setNewBlog(false);
+        props.toggleVisibility();
+        props.setErrorMessage({
           type: "success",
           message: `New blog added!`,
         });
       })
       .catch((error) => {
-        setErrorMessage({
+        props.setErrorMessage({
           type: "error",
           message: `Error: ${error.response?.data?.error || error.message}`,
         });
       });
     setTimeout(() => {
-      setErrorMessage({ type: "", message: "" });
+      props.setErrorMessage({ type: "", message: "" });
     }, 5000);
   };
 
@@ -71,10 +73,10 @@ const AddBlog = ({ setNewBlog, setBlogs, blogs, setErrorMessage }) => {
         />
         <br />
         <Button text="Save" type="submit" />
-        <Button onClick={() => setNewBlog(false)} text="Cancel" type="button" />
+        <Button onClick={props.toggleVisibility} text="Cancel" type="button" />
       </form>
     </div>
   );
 };
 
-export default AddBlog;
+export default BlogForm;

@@ -18,3 +18,18 @@
   box-shadow: 0 4px 16px rgba(37, 99, 235, 0.15);
   outline: none;
 }
+
+.button-small {
+  font-size: 0.8em;
+  padding: 0.2em 0.7em;
+  margin-left: 0.5em;
+  vertical-align: middle;
+}
+
+.delete-button {
+  font-size: 0.8em;
+  padding: 0.2em 0.7em;
+  margin-left: 0.5em;
+  vertical-align: middle;
+  background-color: #be7474;
+}
