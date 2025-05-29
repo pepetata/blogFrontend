@@ -54,7 +54,7 @@ const Blog = (props) => {
           message: `Blog removed!!`,
         })
       );
-      // Hide details first
+      // Hide details first - ok
       if (props.toggleVisibility) {
         props.toggleVisibility(false);
       }
