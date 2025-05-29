@@ -1,4 +1,9 @@
-const Notification = ({ message, type }) => {
+import { useSelector } from "react-redux";
+
+const Notification = () => {
+  const { message, type } = useSelector((state) => state.notification);
+  // console.log(`Notification - message`, message, type);
+
   if (!message) {
     return null;
   }
@@ -6,6 +11,9 @@ const Notification = ({ message, type }) => {
   let className = "notification"; // Default class
 
   switch (type) {
+    case "critical":
+      className += " error";
+      break;
     case "error":
       className += " error";
       break;
@@ -19,6 +27,7 @@ const Notification = ({ message, type }) => {
       break;
   }
 
+  console.log(`Notification - class`, className, "type =====", type);
   return <div className={className}>{message}</div>;
 };
 

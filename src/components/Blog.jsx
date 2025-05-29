@@ -1,50 +1,68 @@
 import { useRef } from "react";
-import Togglable from "./Toggable";
+import { useDispatch } from "react-redux";
+import Togglable from "./Togglable";
 import Button from "./Button";
-import blogService from "../services/blogs";
+import { showNotification } from "../components/helper";
+import { addLikes, removeBlog } from "../reducers/blogReducer";
 
 import "../css/Blog.css";
 
 const Blog = (props) => {
+  const dispatch = useDispatch();
   const detailsRef = useRef();
+  const blog = props.blog;
+  const handleLikes = async (blog) => {
+    try {
+      await dispatch(addLikes(blog));
+      dispatch(
+        showNotification({
+          type: "success",
+          message: `Blog updated!`,
+        })
+      );
+    } catch (error) {
+      const message = `Error: ${error?.response?.data?.error || error?.message || "Unknown error"}`;
+      console.error("Error updating blog:", error);
+      dispatch(showNotification({ type: "error", message }));
+    }
 
-  const addLikes = (blog) => {
     // event.preventDefault();
-    blogService
-      .addLike(blog)
-      .then((response) => {
-        props.updateBlog(response);
-      })
-      .catch((error) => {
-        props.setErrorMessage({
-          type: "error",
-          message: `Error: ${error.response?.data?.error || error.message}`,
-        });
-      });
-    setTimeout(() => {
-      props.setErrorMessage({ type: "", message: "" });
-    }, 5000);
+    // blogService
+    //   .addLike(blog)
+    //   .then((updatedBlog) => {
+    //     setBlogs((blogs) =>
+    //       blogs.map((blog) => (blog.id === updatedBlog.id ? updatedBlog : blog))
+    //     );
+    //   })
+    //   .catch((error) => {
+    //     const message = `Error: ${error?.response?.data?.error || error?.message || "Unknown error"}`;
+    //     dispatch(showNotification({ type: "error", message }));
+    //   });
   };
 
-  const removeBlog = (blog) => {
+  const handleRemoveBlog = async (blog) => {
     const confirmed = window.confirm(
       "Are you sure you want to remove this blog?"
     );
     if (!confirmed) return;
-    blogService
-      .remove(blog)
-      .then((response) => {
-        props.removeBlog(blog);
-      })
-      .catch((error) => {
-        props.setErrorMessage({
-          type: "error",
-          message: `Error: ${error.response?.data?.error || error.message}`,
-        });
-      });
-    setTimeout(() => {
-      props.setErrorMessage({ type: "", message: "" });
-    }, 5000);
+    try {
+      console.log(`blog to remove`, blog);
+      await dispatch(removeBlog(blog));
+      dispatch(
+        showNotification({
+          type: "success",
+          message: `Blog removed!!`,
+        })
+      );
+      // Hide details first
+      if (props.toggleVisibility) {
+        props.toggleVisibility(false);
+      }
+    } catch (error) {
+      const message = `Error: ${error?.response?.data?.error || error?.message || "Unknown error"}`;
+      console.error("Error creating blog:", error);
+      dispatch(showNotification({ type: "error", message }));
+    }
   };
 
   return (
@@ -55,7 +73,7 @@ const Blog = (props) => {
             <div
               style={{ display: "flex", alignItems: "center", fontWeight: 500 }}
             >
-              <span>{props.blog.title}</span>
+              <span>{blog.title}</span>
               <span style={{ marginLeft: "0.5em" }}>
                 <Button
                   className="button button-small"
@@ -67,23 +85,23 @@ const Blog = (props) => {
             </div>
             {visible && (
               <div>
-                <div>Author: {props.blog.author}</div>
-                <div>URL: {props.blog.url}</div>
+                <div>Author: {blog.author}</div>
+                <div>URL: {blog.url}</div>
                 <div>
-                  Likes: {props.blog.likes}
+                  Likes: {blog.likes}
                   <Button
                     className="button button-small"
                     text="Like"
                     type="button"
-                    onClick={() => addLikes(props.blog)}
+                    onClick={() => handleLikes(blog)}
                   />
                 </div>
-                {props.blog.user === props.userId ? (
+                {blog.user === props.userId ? (
                   <Button
                     className="button delete-button"
                     text="Remove"
                     type="button"
-                    onClick={() => removeBlog(props.blog)}
+                    onClick={() => handleRemoveBlog(blog)}
                   />
                 ) : (
                   ""

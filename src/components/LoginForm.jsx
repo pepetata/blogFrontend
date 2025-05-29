@@ -1,36 +1,38 @@
-import { useState, useEffect } from "react";
-import loginService from "../services/login";
+import { useState } from "react";
+import { useDispatch } from "react-redux";
 import blogService from "../services/blogs";
 import Button from "./Button";
+import { showNotification } from "../components/helper";
+import { loginUser } from "../reducers/loginReducer";
 
-// export const Login = ({ setUser, setErrorMessage }) => {
 export const Login = (props) => {
-  // console.log(`-------- Login props`, props);
+  const dispatch = useDispatch();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+
   const handleLogin = async (event) => {
     event.preventDefault();
+    setLoading(true);
 
     try {
-      console.log(`========== user`, username, password);
-      const user = await loginService.login({
-        username,
-        password,
-      });
-
-      window.localStorage.setItem("loggedBlogAppUser", JSON.stringify(user));
-      blogService.setToken(user.token);
+      const user = await dispatch(loginUser({ username, password }));
       props.setUser(user);
       setUsername("");
       setPassword("");
-    } catch (exception) {
-      console.log(`exception========`, exception);
-      props.setUser(null);
-      props.setErrorMessage({ type: "error", message: "Wrong credentials" });
-      setTimeout(() => {
-        props.setErrorMessage({ type: "", message: "" });
-      }, 5000);
+      props.setShowBlogForm(false);
+      dispatch(
+        showNotification({
+          type: "success",
+          message: `Welcome ${user.name}`,
+        })
+      );
+    } catch (error) {
+      console.error("Error login:", error);
+      const message = `Error: ${error?.response?.data?.error || error?.message || "Unknown error"}`;
+      dispatch(showNotification({ type: "error", message }));
     }
+    setLoading(false);
   };
 
   return (
@@ -91,5 +93,3 @@ export const Logout = ({ setUser, setShowBlogForm: setShowBlogForm }) => {
 
   return <Button onClick={handleLogout} text="Logout" />;
 };
-
-// export default { Login, Logged, Logout };

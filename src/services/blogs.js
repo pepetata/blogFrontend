@@ -10,8 +10,14 @@ const setToken = (newToken) => {
 };
 
 const getAll = () => {
-  const request = axios.get(baseUrl);
-  return request.then((response) => response.data);
+  console.log(`blog service - getAll - baseUrl = `, baseUrl);
+  return axios
+    .get(baseUrl) // Return the promise here
+    .then((response) => response.data)
+    .catch((error) => {
+      console.error("Failed to fetch notes:", error);
+      throw error; // Re-throw the error to handle it in the calling code
+    });
 };
 
 const create = (blog) => {
