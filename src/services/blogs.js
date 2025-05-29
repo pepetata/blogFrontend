@@ -21,6 +21,7 @@ const create = (blog) => {
     headers: { Authorization: token },
   };
 
+  console.log(`LoginForm - login - create - token = `, token);
   const request = axios.post(baseUrl, blog, config);
   return request.then((response) => response.data);
 };

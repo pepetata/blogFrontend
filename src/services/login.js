@@ -5,6 +5,7 @@ const baseUrl = server + "/api/login";
 
 const login = async (credentials) => {
   const response = await axios.post(baseUrl, credentials);
+  console.log(`login.js - login response`, response);
   return response.data;
 };
 

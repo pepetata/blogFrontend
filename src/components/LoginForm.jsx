@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import loginService from "../services/login";
 import blogService from "../services/blogs";
-import Button from "../components/Button";
+import Button from "./Button";
 
 // export const Login = ({ setUser, setErrorMessage }) => {
 export const Login = (props) => {
@@ -41,6 +41,7 @@ export const Login = (props) => {
           username&nbsp;
           <input
             type="text"
+            id="login-username"
             value={username}
             name="Username"
             onChange={({ target }) => setUsername(target.value)}
@@ -49,6 +50,7 @@ export const Login = (props) => {
         <div>
           password&nbsp;
           <input
+            id="login-password"
             type="password"
             value={password}
             name="Password"

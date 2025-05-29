@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import blogService from "./services/blogs";
-import { Logged, Login, Logout } from "./components/Login";
+import { Logged, Login, Logout } from "./components/LoginForm";
 import Blog from "./components/Blog";
 import Button from "./components/Button";
 import Notification from "./components/Notification";

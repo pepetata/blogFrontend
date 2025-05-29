@@ -10,7 +10,7 @@ const BlogForm = (props) => {
     url: "",
   });
 
-  console.log(`----props `, props);
+  // console.log(`----props `, props);
   const handleBlogChange = (event) => {
     const { id, value } = event.target;
     setBlogForm((prev) => ({
