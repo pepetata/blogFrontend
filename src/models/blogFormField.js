@@ -1,0 +1,38 @@
+export const blogFormField = {
+  title: {
+    label: "Title",
+    value: "",
+    name: "title",
+    type: "text",
+    required: true,
+    placeholder: "Type the title",
+    minLength: 3,
+    maxLength: 50,
+    errorMessage: "Title must be between 3 and 50 characters.",
+  },
+  author: {
+    label: "Author",
+    value: "",
+    name: "author",
+    type: "text",
+    // minLength: 2,
+    // errorMessage: "Author must be at least 2 characters.",
+  },
+  url: {
+    label: "URL",
+    value: "",
+    name: "url",
+    type: "url",
+    required: true,
+    errorMessage: "Please enter a valid URL.",
+  },
+  // likes: {
+  //   label: "Likes",
+  //   value: "",
+  //   name: "likes",
+  //   type: "number",
+  //   min: 0,
+  //   max: 1000,
+  //   errorMessage: "Likes must be between 0 and 1000.",
+  // },
+};

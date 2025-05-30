@@ -1,11 +1,9 @@
 import { useState, useEffect, useRef } from "react";
 import { useDispatch } from "react-redux";
-import blogService from "./services/blogs";
+// import blogService from "./services/blogs";
 import { Logged, Login, Logout } from "./components/LoginForm";
 import "./App.css";
-import Blog from "./components/Blog";
 import BlogList from "./components/BlogList";
-import Button from "./components/Button";
 import Notification from "./components/Notification";
 import BlogForm from "./components/BlogForm";
 import { showNotification } from "./components/helper";
@@ -29,7 +27,7 @@ const App = () => {
       if (loggedUserJSON) {
         const user = JSON.parse(loggedUserJSON);
         setUser(user);
-        blogService.setToken(user.token);
+        // blogService.setToken(user.token);
       }
       try {
         // await blogService.getAll().then((blogs) => setBlogs(blogs));
@@ -53,7 +51,7 @@ const App = () => {
           <Logged
             user={user}
             setUser={setUser}
-            // setShowBlogForm={setShowBlogForm}
+            setShowBlogForm={setShowBlogForm}
           />
 
           {!showBlogForm && (

@@ -1,6 +1,18 @@
 import { createSlice } from "@reduxjs/toolkit";
-import blogService from "../services/blogs";
+// import blogService from "../services/resourceService";
+import { generalResourceService } from "../services/resourceService";
 
+const getToken = () => {
+  const user = JSON.parse(
+    window.localStorage.getItem("loggedBlogAppUser") || "null"
+  );
+  return user ? user.token : null;
+};
+
+const blogService = generalResourceService(
+  import.meta.env.VITE_API_URL + "/api/blogs",
+  getToken
+);
 const initialState = {
   blogs: [],
 };
@@ -51,11 +63,13 @@ export const createBlog = (content) => {
 
 export const addLikes = (blog) => {
   return async (dispatch) => {
-    const updatedBlog = await blogService.addLike({
+    const blogToUpdate = {
       ...blog,
       likes: blog.likes + 1,
-    });
-    dispatch(updateBlog(updatedBlog));
+    };
+    await blogService.addLike(blogToUpdate);
+    console.log(`reducer addlikes`, blogToUpdate);
+    dispatch(updateBlog(blogToUpdate));
   };
 };
 

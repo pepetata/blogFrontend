@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import blogService from "../services/blogs";
+// import blogService from "../services/resourceService";
 import Button from "./Button";
 import { showNotification } from "../components/helper";
 import { loginUser } from "../reducers/loginReducer";
@@ -17,7 +17,9 @@ export const Login = (props) => {
 
     try {
       const user = await dispatch(loginUser({ username, password }));
+      // blogService.setToken(user.token);
       props.setUser(user);
+      window.localStorage.setItem("loggedBlogAppUser", JSON.stringify(user));
       setUsername("");
       setPassword("");
       props.setShowBlogForm(false);
@@ -86,7 +88,7 @@ export const Logout = ({ setUser, setShowBlogForm: setShowBlogForm }) => {
     if (!confirmed) return;
 
     window.localStorage.removeItem("loggedBlogAppUser");
-    blogService.setToken(null);
+    // blogService.setToken(null);
     setUser(null);
     setShowBlogForm(false);
   };

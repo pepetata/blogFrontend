@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import loginService from "../services/login";
-import blogService from "../services/blogs";
-import {showNotification} from "../components/helper";
+// import blogService from "../hooks/blogs";
+import { showNotification } from "../components/helper";
 
 // const loginSlice = createSlice({
 //   name: "login",
@@ -31,17 +31,18 @@ import {showNotification} from "../components/helper";
 // export const { setLogged , setUser} = loginSlice.actions;
 // export default loginSlice.reducer;
 
-
-export const loginUser = content => {
-    return async dispatch => {
-      const user = await loginService.login(content);
-      // console.log(`LoginUser -------`,user);
-        // dispatch(setUser(user));
-        // console.log(`logou???????????????????????????????????`,);
-        window.localStorage.setItem("loggedBlogAppUser", JSON.stringify(user));
-        blogService.setToken(user.token);
-        // dispatch(setLogged(true));
-      dispatch(showNotification({ type: "success", message: `Welcome ${user.name}` }));
-      return user
-  }
-}
+export const loginUser = (content) => {
+  return async (dispatch) => {
+    const user = await loginService.login(content);
+    // console.log(`LoginUser -------`,user);
+    // dispatch(setUser(user));
+    // console.log(`logou???????????????????????????????????`,);
+    window.localStorage.setItem("loggedBlogAppUser", JSON.stringify(user));
+    // blogService.setToken(user.token);
+    // dispatch(setLogged(true));
+    dispatch(
+      showNotification({ type: "success", message: `Welcome ${user.name}` })
+    );
+    return user;
+  };
+};
