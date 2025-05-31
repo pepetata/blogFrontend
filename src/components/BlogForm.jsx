@@ -1,16 +1,16 @@
-import { useState } from "react";
 import { useDispatch } from "react-redux";
-
+import { useNavigate } from "react-router-dom";
 import Button from "./Button";
 import LabeledInput from "./LabledInput";
 import { showNotification } from "../components/helper";
 import { createBlog } from "../reducers/blogReducer";
 import { useFormFields } from "../hooks";
-import { blogFormField } from "../models/blogFormField";
+import { blogFormField } from "../formFields/blogFormField";
 import "../css/AddBlog.css";
 
 const BlogForm = (props) => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const emptyForm = { title: "", author: "", url: "" };
   // const [blogForm, setBlogForm] = useState(emptyForm);
   const [fields, clearFields] = useFormFields(blogFormField);
@@ -24,7 +24,7 @@ const BlogForm = (props) => {
     event.preventDefault();
     try {
       await dispatch(createBlog(blogForm));
-      props.toggleVisibility(false);
+      // props.toggleVisibility(false);
       dispatch(
         showNotification({
           type: "success",
@@ -33,6 +33,7 @@ const BlogForm = (props) => {
       );
       console.log("Blog created successfully:", blogForm);
       clearFields();
+      navigate("/user");
     } catch (error) {
       const message = `Error: ${error?.response?.data?.error || error?.message || "Unknown error"}`;
       console.error("Error creating blog:", error);
@@ -48,9 +49,19 @@ const BlogForm = (props) => {
         <LabeledInput field={fields.author} />
         <LabeledInput field={fields.url} />
         <br />
-        <Button text="Save" type="submit" />
-        <Button text="Clear" type="button" onClick={clearFields} />
-        <Button onClick={props.toggleVisibility} text="Cancel" type="button" />
+        <Button text="Save" type="submit" className="button-save" />
+        <Button
+          text="Clear"
+          type="button"
+          onClick={clearFields}
+          className="button-clear"
+        />
+        <Button
+          onClick={() => navigate("/")}
+          text="Cancel"
+          type="button"
+          className="button-cancel"
+        />
       </form>
     </div>
   );

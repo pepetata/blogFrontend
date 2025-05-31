@@ -1,5 +1,6 @@
 import { useRef } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import Togglable from "./Togglable";
 import Button from "./Button";
 import { showNotification } from "../components/helper";
@@ -8,9 +9,21 @@ import { addLikes, removeBlog } from "../reducers/blogReducer";
 import "../css/Blog.css";
 
 const Blog = (props) => {
+  const blogs = useSelector((state) => state.blogs.blogs);
+  const user = useSelector((state) => state.login.user);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { id } = useParams();
   const detailsRef = useRef();
-  const blog = props.blog;
+  const blog = blogs.find((n) => String(n.id) === String(id));
+  console.log(`user=====`, user, blog), id;
+  console.log("Navigated from:", location.state?.from);
+
+  if (!blog) {
+    return <div>Loading blog...</div>;
+  }
+
   const handleLikes = async (blog) => {
     try {
       await dispatch(addLikes(blog));
@@ -25,19 +38,6 @@ const Blog = (props) => {
       console.error("Error updating blog:", error);
       dispatch(showNotification({ type: "error", message }));
     }
-
-    // event.preventDefault();
-    // blogService
-    //   .addLike(blog)
-    //   .then((updatedBlog) => {
-    //     setBlogs((blogs) =>
-    //       blogs.map((blog) => (blog.id === updatedBlog.id ? updatedBlog : blog))
-    //     );
-    //   })
-    //   .catch((error) => {
-    //     const message = `Error: ${error?.response?.data?.error || error?.message || "Unknown error"}`;
-    //     dispatch(showNotification({ type: "error", message }));
-    //   });
   };
 
   const handleRemoveBlog = async (blog) => {
@@ -58,6 +58,7 @@ const Blog = (props) => {
       if (props.toggleVisibility) {
         props.toggleVisibility(false);
       }
+      navigate(location.state?.from || "/");
     } catch (error) {
       const message = `Error: ${error?.response?.data?.error || error?.message || "Unknown error"}`;
       console.error("Error creating blog:", error);
@@ -67,7 +68,12 @@ const Blog = (props) => {
 
   return (
     <div className="blog-container">
-      <Togglable buttonLabel="View" hideLabel="Hide" ref={detailsRef}>
+      <Togglable
+        defaultVisible={true}
+        buttonLabel="View"
+        hideLabel="Hide"
+        ref={detailsRef}
+      >
         {(visible, toggleVisibility) => (
           <div className={visible ? "blog-details" : ""}>
             <div
@@ -96,7 +102,7 @@ const Blog = (props) => {
                     onClick={() => handleLikes(blog)}
                   />
                 </div>
-                {blog.user === props.userId ? (
+                {blog.user.id === user.id ? (
                   <Button
                     className="button delete-button"
                     text="Remove"

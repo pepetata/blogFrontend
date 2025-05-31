@@ -1,7 +1,8 @@
 import { useState, forwardRef, useImperativeHandle } from "react";
 
 const Togglable = forwardRef((props, ref) => {
-  const [visible, setVisible] = useState(false);
+  const { defaultVisible = false } = props;
+  const [visible, setVisible] = useState(defaultVisible);
 
   const toggleVisibility = () => setVisible((v) => !v);
 

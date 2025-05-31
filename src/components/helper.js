@@ -5,7 +5,7 @@ export const clearNotification = () => (dispatch) => {
 };
 
 export const showNotification =
-  (payload, timeout = 10000) =>
+  (payload, timeout = 5000) =>
   (dispatch) => {
     const critical = payload.type === "critical";
     dispatch(setNotification(payload));

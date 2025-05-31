@@ -1,40 +1,34 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
 // import blogService from "../services/resourceService";
 import Button from "./Button";
 import { showNotification } from "../components/helper";
-import { loginUser } from "../reducers/loginReducer";
+import { loginUser, logoutUser } from "../reducers/loginReducer";
 
 export const Login = (props) => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
+  const { param } = useParams();
 
   const handleLogin = async (event) => {
     event.preventDefault();
-    setLoading(true);
 
     try {
       const user = await dispatch(loginUser({ username, password }));
       // blogService.setToken(user.token);
-      props.setUser(user);
-      window.localStorage.setItem("loggedBlogAppUser", JSON.stringify(user));
+      // props.setUser(user);
       setUsername("");
       setPassword("");
-      props.setShowBlogForm(false);
-      dispatch(
-        showNotification({
-          type: "success",
-          message: `Welcome ${user.name}`,
-        })
-      );
+      // props.setShowBlogForm(false);
+      navigate(param ? `/${param}` : `/`);
     } catch (error) {
       console.error("Error login:", error);
       const message = `Error: ${error?.response?.data?.error || error?.message || "Unknown error"}`;
       dispatch(showNotification({ type: "error", message }));
     }
-    setLoading(false);
   };
 
   return (
@@ -62,7 +56,7 @@ export const Login = (props) => {
           />
         </div>
         <br />
-        <Button type="submit" text="Login" />
+        <Button type="submit" text="Login" className="button-save" />
       </form>
     </div>
   );
@@ -80,18 +74,25 @@ export const Logged = (props) => {
   );
 };
 
-export const Logout = ({ setUser, setShowBlogForm: setShowBlogForm }) => {
+export const Logout = ({ setLogout }) => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const handleLogout = async (event) => {
     event.preventDefault();
 
     const confirmed = window.confirm("Are you sure you want to logout?");
     if (!confirmed) return;
 
-    window.localStorage.removeItem("loggedBlogAppUser");
+    dispatch(logoutUser());
+    setLogout(true);
+    navigate(`/`);
+
     // blogService.setToken(null);
-    setUser(null);
-    setShowBlogForm(false);
+    // setUser(null);
+    // setShowBlogForm(false);
   };
 
-  return <Button onClick={handleLogout} text="Logout" />;
+  return (
+    <Button onClick={handleLogout} text="Logout" className="button-logout" />
+  );
 };

@@ -1,19 +1,35 @@
 import { useSelector } from "react-redux";
-import Blog from "./Blog";
-import Button from "./Button";
+import { useNavigate, useLocation } from "react-router-dom";
+import Table from "react-bootstrap/Table";
 
-const BlogList = (props) => {
+const BlogList = () => {
   const blogs = useSelector((state) => state.blogs.blogs);
+  const navigate = useNavigate();
+  const location = useLocation();
+  console.log(`BlogList - blogs`, blogs);
 
   return (
     <div>
-      <Button onClick={() => props.setShowBlogForm(true)} text="New Blog" />
       <h2>Blogs</h2>
-      {[...blogs]
-        .sort((a, b) => b.likes - a.likes)
-        .map((blog) => (
-          <Blog key={blog.id} blog={blog} userId={props.user.id} />
-        ))}
+      <Table striped bordered hover>
+        <tbody>
+          {[...blogs]
+            .sort((a, b) => b.likes - a.likes)
+            .map((blog) => (
+              <tr
+                key={blog.id}
+                style={{ cursor: "pointer" }}
+                onClick={() =>
+                  navigate(`/blogs/${blog.id}`, {
+                    state: { from: location.pathname },
+                  })
+                }
+              >
+                <td>{blog.title}</td>
+              </tr>
+            ))}
+        </tbody>
+      </Table>
     </div>
   );
 };

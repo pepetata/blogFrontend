@@ -7,7 +7,9 @@
   font-size: 1rem;
   font-weight: 500;
   cursor: pointer;
-  transition: background 0.2s, box-shadow 0.2s;
+  transition:
+    background 0.2s,
+    box-shadow 0.2s;
   box-shadow: 0 2px 8px rgba(37, 99, 235, 0.08);
   margin: 0.5em 0.5em 0.5em 0; /* Add space around each button */
 }
@@ -32,4 +34,33 @@
   margin-left: 0.5em;
   vertical-align: middle;
   background-color: #be7474;
+}
+
+.button-save {
+  background-color: #28a745;
+  color: #fff;
+}
+
+.button-save:hover {
+  background-color: #218838;
+}
+
+.button-clear {
+  background-color: #ffc107;
+  color: #212529;
+}
+
+.button-logout:hover,
+.button-clear:hover {
+  background-color: #e0a800;
+}
+
+.button-logout,
+.button-cancel {
+  background-color: #dc3545;
+  color: #fff;
+}
+
+.button-cancel:hover {
+  background-color: #c82333;
 }
