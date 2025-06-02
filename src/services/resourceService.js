@@ -1,13 +1,31 @@
 import axios from "axios";
 
 export const generalResourceService = (baseUrl, getToken) => {
+  const getTokenFun = () => {
+    const user = JSON.parse(
+      window.localStorage.getItem("loggedBlogAppUser") || "null"
+    );
+    return user ? user.token : null;
+  };
+
   const getConfig = () => {
-    const token = getToken ? getToken() : null;
+    const token = getToken ? getTokenFun() : null;
+    // console.log(`========token`, token);
     return token ? { headers: { Authorization: `Bearer ${token}` } } : {};
   };
 
-  const getAll = async () => {
-    const response = await axios.get(baseUrl, getConfig());
+  const getAll = async (data) => {
+    // console.log(`getAll - data`, data);
+    const response = await axios.get(baseUrl, data, getConfig());
+    return response.data;
+  };
+
+  const getCommentsForBlog = async (blogId) => {
+    const response = await axios.get(
+      `${baseUrl}?blogId=${blogId}`,
+      getConfig()
+    );
+    console.log(`repomse`, response.data);
     return response.data;
   };
 
@@ -34,7 +52,7 @@ export const generalResourceService = (baseUrl, getToken) => {
     await axios.delete(`${baseUrl}/${id}`, getConfig());
   };
 
-  return { getAll, create, update, addLike, remove };
+  return { getAll, getCommentsForBlog, create, update, addLike, remove };
 };
 
 // import axios from "axios";

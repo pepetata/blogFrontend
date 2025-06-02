@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
 // import blogService from "../services/resourceService";
 import Button from "./Button";
 import { showNotification } from "../components/helper";
@@ -9,9 +9,10 @@ import { loginUser, logoutUser } from "../reducers/loginReducer";
 export const Login = (props) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
+  const { param } = useParams();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const { param } = useParams();
 
   const handleLogin = async (event) => {
     event.preventDefault();
@@ -23,7 +24,7 @@ export const Login = (props) => {
       setUsername("");
       setPassword("");
       // props.setShowBlogForm(false);
-      navigate(param ? `/${param}` : `/`);
+      navigate(location.state?.from || (param ? `/${param}` : `/`));
     } catch (error) {
       console.error("Error login:", error);
       const message = `Error: ${error?.response?.data?.error || error?.message || "Unknown error"}`;

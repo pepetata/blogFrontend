@@ -30,7 +30,7 @@ const blogSlice = createSlice({
       state.blogs.push(action.payload);
     },
     deleteBlog(state, action) {
-      const idToRemove = action.payload.id;
+      const idToRemove = action.payload;
       state.blogs = state.blogs.filter((blog) => blog.id !== idToRemove);
     },
     updateBlog(state, action) {
@@ -76,7 +76,7 @@ export const addLikes = (blog) => {
 
 export const removeBlog = (blog) => {
   return async (dispatch) => {
-    await blogService.remove(blog.id);
+    await blogService.remove(blog);
     dispatch(deleteBlog(blog));
   };
 };

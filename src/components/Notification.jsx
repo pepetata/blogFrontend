@@ -27,7 +27,7 @@ const Notification = () => {
       break;
   }
 
-  console.log(`Notification - class`, className, "type =====", type);
+  // console.log(`Notification - class`, className, "type =====", type);
   return <div className={className}>{message}</div>;
 };
 

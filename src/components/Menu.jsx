@@ -13,8 +13,8 @@ import Notification from "./Notification";
 const Menu = () => {
   const logged = useSelector((state) => state.login.logged);
   const user = useSelector((state) => state.login.user);
-  console.log(`Menu - logged`, logged);
-  console.log(`Menu - user`, user);
+  // console.log(`Menu - logged`, logged);
+  // console.log(`Menu - user`, user);
 
   return (
     <>

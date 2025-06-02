@@ -2,12 +2,14 @@ import { configureStore } from "@reduxjs/toolkit";
 import blogReducer from "./blogReducer";
 import notificationReducer from "./notificationReducer";
 import loginReducer from "./loginReducer";
+import commentReducer from "./commentReducer";
 
 const store = configureStore({
   reducer: {
     blogs: blogReducer,
     notification: notificationReducer,
     login: loginReducer,
+    comment: commentReducer,
   },
 });
 

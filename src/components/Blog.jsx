@@ -7,6 +7,7 @@ import { showNotification } from "../components/helper";
 import { addLikes, removeBlog } from "../reducers/blogReducer";
 
 import "../css/Blog.css";
+import CommentList from "./CommentList";
 
 const Blog = (props) => {
   const blogs = useSelector((state) => state.blogs.blogs);
@@ -17,8 +18,8 @@ const Blog = (props) => {
   const { id } = useParams();
   const detailsRef = useRef();
   const blog = blogs.find((n) => String(n.id) === String(id));
-  console.log(`user=====`, user, blog), id;
-  console.log("Navigated from:", location.state?.from);
+  // console.log(`user=====`, user, blog), id;
+  // console.log("Navigated from:", location.state?.from);
 
   if (!blog) {
     return <div>Loading blog...</div>;
@@ -67,56 +68,64 @@ const Blog = (props) => {
   };
 
   return (
-    <div className="blog-container">
-      <Togglable
-        defaultVisible={true}
-        buttonLabel="View"
-        hideLabel="Hide"
-        ref={detailsRef}
-      >
-        {(visible, toggleVisibility) => (
-          <div className={visible ? "blog-details" : ""}>
-            <div
-              style={{ display: "flex", alignItems: "center", fontWeight: 500 }}
-            >
-              <span>{blog.title}</span>
-              <span style={{ marginLeft: "0.5em" }}>
-                <Button
-                  className="button button-small"
-                  onClick={toggleVisibility}
-                  type="button"
-                  text={visible ? "Hide" : "View"}
-                />
-              </span>
-            </div>
-            {visible && (
-              <div>
-                <div>Author: {blog.author}</div>
-                <div>URL: {blog.url}</div>
-                <div>
-                  Likes: {blog.likes}
+    <div>
+      <div className="blog-container">
+        <Togglable
+          defaultVisible={true}
+          buttonLabel="View"
+          hideLabel="Hide"
+          ref={detailsRef}
+        >
+          {(visible, toggleVisibility) => (
+            <div className={visible ? "blog-details" : ""}>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  fontWeight: 500,
+                }}
+              >
+                <span>{blog.title}</span>
+                <span style={{ marginLeft: "0.5em" }}>
                   <Button
                     className="button button-small"
-                    text="Like"
+                    onClick={toggleVisibility}
                     type="button"
-                    onClick={() => handleLikes(blog)}
+                    text={visible ? "Hide" : "View"}
                   />
-                </div>
-                {blog.user.id === user.id ? (
-                  <Button
-                    className="button delete-button"
-                    text="Remove"
-                    type="button"
-                    onClick={() => handleRemoveBlog(blog)}
-                  />
-                ) : (
-                  ""
-                )}
+                </span>
               </div>
-            )}
-          </div>
-        )}
-      </Togglable>
+              {visible && (
+                <div>
+                  <div>Author: {blog.author}</div>
+                  <div>URL: {blog.url}</div>
+                  <div>
+                    Likes: {blog.likes}
+                    <Button
+                      className="button button-small"
+                      text="Like"
+                      type="button"
+                      onClick={() => handleLikes(blog)}
+                    />
+                  </div>
+                  {blog.user.id === user.id ? (
+                    <Button
+                      className="button delete-button"
+                      text="Remove"
+                      type="button"
+                      onClick={() => handleRemoveBlog(blog.id)}
+                    />
+                  ) : (
+                    ""
+                  )}
+                </div>
+              )}
+            </div>
+          )}
+        </Togglable>
+      </div>
+      <br />
+      <CommentList blogId={blog.id} />
     </div>
   );
 };
