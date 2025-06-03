@@ -1,11 +1,13 @@
 const sucessfullLoginWith = async (page, username, password) => {
+  await page.getByRole("link", { name: "Login" }).click();
   await page.locator("#login-username").fill(username);
   await page.locator("#login-password").fill(password);
   await page.getByRole("button", { name: "login" }).click();
-  await page.getByText("logged-in").waitFor();
+  await page.getByText("Welcome").waitFor();
 };
 
 const failLoginWith = async (page, username, password) => {
+  await page.getByRole("link", { name: "Login" }).click();
   await page.locator("#login-username").fill(username);
   await page.locator("#login-password").fill(password);
   await page.getByRole("button", { name: "login" }).click();
@@ -31,7 +33,8 @@ const createBlog2 = async (page) => {
 };
 
 const createBlog = async (page, content) => {
-  await page.getByRole("button", { name: "New Blog" }).click();
+  // await page.getByRole("link", { name: "Login" }).click();
+  await page.getByRole("link", { name: "New Blog" }).click();
   await page.getByLabel("Title").fill(content.title);
   await page.getByLabel("Author").fill(content.author);
   await page.getByLabel("URL").fill(content.url);
